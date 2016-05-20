@@ -22,7 +22,7 @@ public class ScrLostRespawn implements Screen, InputProcessor{
     public SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
     Stage stage;
-    Stomper game;
+    GameStomper game;
     private Texture textureLose;
     TextureAtlas TaBtnImage;
     private Sprite spriteLose;
@@ -30,7 +30,7 @@ public class ScrLostRespawn implements Screen, InputProcessor{
     TextButton.TextButtonStyle textButtonStyle;
     Skin skin;
 //TODO: respawn a new player from player spawn.
-    ScrLostRespawn(Stomper game) {
+    ScrLostRespawn(GameStomper game) {
         this.game = game;
         textureLose=new Texture(Gdx.files.internal("images/YouLOSE.jpeg"));
         spriteLose=new Sprite(textureLose);
@@ -54,8 +54,8 @@ public class ScrLostRespawn implements Screen, InputProcessor{
         btnReturn.addListener(new InputListener() {//http://gamedev.stackexchange.com/questions/60123/registering-inputlistener-in-libgdx
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.currentState = Stomper.GameState.GAME;
-                game.updateState();
+                game.currentState = GameStomper.GameState.GAME;
+                game.updateScreen();
                 return true;
             }
         });

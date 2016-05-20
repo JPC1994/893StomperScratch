@@ -29,7 +29,7 @@ import java.util.Iterator;
  */
 
 public class ScrGame implements Screen, InputProcessor {
-	Stomper game;
+	GameStomper game;
 	World world;
 	Map map;
 	OrthographicCamera camera;
@@ -42,9 +42,8 @@ public class ScrGame implements Screen, InputProcessor {
 	BitmapFont font= new BitmapFont();
     boolean bReset=false;
     float elapsedtime = 0;
-    float immunitytimer;
 
-	ScrGame(Stomper gameMain) {
+	ScrGame(GameStomper gameMain) {
 		this.game = gameMain;
 
 		spriteBatch = new SpriteBatch();
@@ -138,8 +137,8 @@ public class ScrGame implements Screen, InputProcessor {
                             //if the player's health reaches 0, send the user to the game over screen
                             if (player.health == 0) {
                                 //sets the screen for the dead player
-                                game.currentState = Stomper.GameState.DEAD;
-                                game.updateState();
+                                game.currentState = GameStomper.GameState.DEAD;
+                                game.updateScreen();
                                 reset();
                             }
                         }
@@ -170,6 +169,7 @@ public class ScrGame implements Screen, InputProcessor {
 
 	private void initializePlayer() {
 		player = new Player(world, map.getPlayerSpawnPoint());
+        immunity();
 	}
 
 	private void initializeEnemySpawner() {
@@ -228,6 +228,7 @@ public class ScrGame implements Screen, InputProcessor {
 	private void immunity(){
 		player.bImmune=true;
         System.out.println("immune");
+        //timer code from intothewoods group:https://github.com/spidermanchild/IntoTheWoodsMultScreens
 		Timer.schedule(new Timer.Task() {
 			@Override
 			public void run() {
