@@ -47,7 +47,7 @@ public class EnemySpawner {
 			//every 5 seconds a new enemy is spawned
 			if (elapsedtime >= 50) {
 				elapsedtime = 0;
-				if (fastEnemies.size() < 0)
+				if (fastEnemies.size() < 2)
 					createEnemy();
 			}
 		}

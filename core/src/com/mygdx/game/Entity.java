@@ -96,7 +96,7 @@ public class Entity {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        //fixtureDef.isSensor = true;
+        fixtureDef.isSensor = true;
 
         footSensor = body.createFixture(fixtureDef);
         shape.dispose();

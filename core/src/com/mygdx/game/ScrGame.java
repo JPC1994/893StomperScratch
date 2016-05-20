@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
+//user data is apparently henceforth banned(Kevin)
 /**
  * Created by k9sty on 2016-03-12.
  */
@@ -66,11 +66,30 @@ public class ScrGame implements Screen, InputProcessor {
 				Fixture fixtureA = contact.getFixtureA();
 				Fixture fixtureB = contact.getFixtureB();
 
+				Fixture enemyFixture = (fixtureA.getFilterData().groupIndex == -2) ? fixtureA : (fixtureB.getFilterData().groupIndex == -2) ? fixtureB : null;
+				Fixture bulletFixture = (fixtureA.getFilterData().groupIndex == -1) ? fixtureA : (fixtureB.getFilterData().groupIndex == -1) ? fixtureB : null;
+				Fixture playerFoot = (fixtureA.getFilterData().categoryBits==3) ? fixtureA : (fixtureB.getFilterData().categoryBits==3) ? fixtureB : null;
+
 				if (fixtureA == player.footSensor)
 					player.isGrounded = true;
 
 				else if (fixtureB == player.footSensor)
 					player.isGrounded = true;
+
+				for (int i=0; i<arSpawner.length;i++) {
+					if (enemyFixture != null && (bulletFixture != null || playerFoot != null)) { // An enemy and a bullet collided
+						// Find the enemy that owns this fixture
+						if (playerFoot != null) {
+							player.body.applyLinearImpulse(new Vector2(0, 50), new Vector2(player.getPosition()), false);
+						}
+						for (FastEnemy fastEnemy : arSpawner[i].fastEnemies) {
+							if (fastEnemy.body.equals(enemyFixture.getBody())) {
+								fastEnemy.isAlive = false;
+								break;
+							}
+						}
+					}
+				}
 			}
 
 			@Override
@@ -92,26 +111,12 @@ public class ScrGame implements Screen, InputProcessor {
 
 				Fixture enemyFixture = (fa.getFilterData().groupIndex == -2) ? fa : (fb.getFilterData().groupIndex == -2) ? fb : null;
 				Fixture bulletFixture = (fa.getFilterData().groupIndex == -1) ? fa : (fb.getFilterData().groupIndex == -1) ? fb : null;
-				Fixture playerFoot = (fa.getFilterData().categoryBits==3) ? fa : (fb.getFilterData().categoryBits==3) ? fb : null;
 				Fixture playerBody = (fa.getFilterData().categoryBits==2) ? fa : (fb.getFilterData().categoryBits==2) ? fb : null;
 				Fixture HarmfulObj = (fa.getFilterData().categoryBits==5) ? fa : (fb.getFilterData().categoryBits==5) ? fb : null;
 
 				for (int i=0; i<arSpawner.length;i++) {
                     if(player.bImmune==false) {
                         //cycle through enemies spawned by all spawners
-                        if (enemyFixture != null && (bulletFixture != null || playerFoot != null)) { // An enemy and a bullet collided
-                            // Find the enemy that owns this fixture
-                            if (playerFoot != null) {
-                                player.body.applyLinearImpulse(new Vector2(0, 50), new Vector2(player.getPosition()), false);
-                            }
-                            for (FastEnemy fastEnemy : arSpawner[i].fastEnemies) {
-                                if (fastEnemy.body.equals(enemyFixture.getBody())) {
-                                    fastEnemy.isAlive = false;
-                                    break;
-                                }
-                            }
-                        }
-
                         if (bulletFixture != null) { // A bullet hit something
                             // Find the bullet that owns the fixture
                             for (Bullet bullet : bullets) {
@@ -237,7 +242,7 @@ public class ScrGame implements Screen, InputProcessor {
 			}
 		}, 5);
 	}
-
+	//TODO: respawn a new player from player spawn.
     private void reset(){
         //to include other property resets later
         player.health=player.MAX_HEALTH;

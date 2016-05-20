@@ -29,7 +29,7 @@ public class ScrLostRespawn implements Screen, InputProcessor{
     TextButton btnReturn;
     TextButton.TextButtonStyle textButtonStyle;
     Skin skin;
-//TODO: respawn a new player from player spawn.
+
     ScrLostRespawn(GameStomper game) {
         this.game = game;
         textureLose=new Texture(Gdx.files.internal("images/YouLOSE.jpeg"));
@@ -42,6 +42,7 @@ public class ScrLostRespawn implements Screen, InputProcessor{
         stage= new Stage();
         skin = new Skin();
         Gdx.input.setInputProcessor(stage);
+        //got Mr grondin's button images from the button scratch: https://github.com/Mrgfhci/LibGDX1
         TaBtnImage = new TextureAtlas(Gdx.files.internal("images/UpButton.pack"));
         skin.addRegions(TaBtnImage);
         textButtonStyle = new TextButton.TextButtonStyle();
