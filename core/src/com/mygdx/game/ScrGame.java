@@ -63,6 +63,7 @@ public class ScrGame implements Screen, InputProcessor {
 			public void beginContact(Contact contact) {
 				// Unlike presolve, beginContact is called for sensors. If you want to move the
 				// other hit detection code to presolve, go ahead, just leave the sensor code
+                //had to use begin contact for the jumping on enemies collision because the foot sensor is a sensor and doesnt get called in pre and post solve
 				Fixture fixtureA = contact.getFixtureA();
 				Fixture fixtureB = contact.getFixtureB();
 
@@ -110,22 +111,13 @@ public class ScrGame implements Screen, InputProcessor {
 				Fixture fb = contact.getFixtureB();
 
 				Fixture enemyFixture = (fa.getFilterData().groupIndex == -2) ? fa : (fb.getFilterData().groupIndex == -2) ? fb : null;
-				Fixture bulletFixture = (fa.getFilterData().groupIndex == -1) ? fa : (fb.getFilterData().groupIndex == -1) ? fb : null;
+
 				Fixture playerBody = (fa.getFilterData().categoryBits==2) ? fa : (fb.getFilterData().categoryBits==2) ? fb : null;
 				Fixture HarmfulObj = (fa.getFilterData().categoryBits==5) ? fa : (fb.getFilterData().categoryBits==5) ? fb : null;
 
-				for (int i=0; i<arSpawner.length;i++) {
+				for (int i=0; i<arSpawner.length;i++){
                     if(player.bImmune==false) {
                         //cycle through enemies spawned by all spawners
-                        if (bulletFixture != null) { // A bullet hit something
-                            // Find the bullet that owns the fixture
-                            for (Bullet bullet : bullets) {
-                                if (bullet.body.equals(bulletFixture.getBody())) {
-                                    bullet.hasContacted = true;
-                                    break;
-                                }
-                            }
-                        }
                         if ((HarmfulObj != null || enemyFixture != null) && playerBody != null) {
                             //set all enemies and bullets to be destroyed on the next call of the clean function
                             System.out.println("Health: " + player.health);
@@ -153,7 +145,20 @@ public class ScrGame implements Screen, InputProcessor {
 
 			@Override
 			public void postSolve(Contact contact, ContactImpulse impulse) {
+                Fixture fa = contact.getFixtureA();
+                Fixture fb = contact.getFixtureB();
 
+                Fixture bulletFixture = (fa.getFilterData().groupIndex == -1) ? fa : (fb.getFilterData().groupIndex == -1) ? fb : null;
+
+                if (bulletFixture != null) { // A bullet hit something
+                    // Find the bullet that owns the fixture
+                    for (Bullet bullet : bullets) {
+                        if (bullet.body.equals(bulletFixture.getBody())) {
+                            bullet.hasContacted = true;
+                            break;
+                        }
+                    }
+                }
 			}
 		});
 
@@ -240,11 +245,15 @@ public class ScrGame implements Screen, InputProcessor {
 				player.bImmune=false;
                 System.out.println("vulnerable");
 			}
-		}, 5);
+		}, 3);
+        //3 second immunity whenever the player contacts an enemy
 	}
 	//TODO: respawn a new player from player spawn.
     private void reset(){
-        //to include other property resets later
+        //to include other property resets later like player position
+		//player.body.setTransform(map.getPlayerSpawnPoint(),0);
+        /*world.destroyBody(player.body);
+        initializePlayer();*/
         player.health=player.MAX_HEALTH;
         elapsedtime=0;
     }
@@ -275,7 +284,6 @@ public class ScrGame implements Screen, InputProcessor {
         //if the player contacts an enemy or obstacle, subtract one life from the player
         if (bReset){
             player.health-=1;
-            player.immunity=10f;
             bReset=false;
         }
 	}

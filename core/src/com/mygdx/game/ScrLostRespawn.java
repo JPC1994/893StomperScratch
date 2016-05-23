@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,41 +21,34 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  */
 public class ScrLostRespawn implements Screen, InputProcessor{
     public SpriteBatch batch = new SpriteBatch();
-    BitmapFont font = new BitmapFont();
     Stage stage;
     GameStomper game;
     private Texture textureLose;
-    TextureAtlas TaBtnImage;
     private Sprite spriteLose;
     TextButton btnReturn;
-    TextButton.TextButtonStyle textButtonStyle;
-    Skin skin;
+    BtnBaseStyle textButtonStyle = new BtnBaseStyle();
 
+    //TODO: Get a proper end screen and button image for the respawn screen
     ScrLostRespawn(GameStomper game) {
         this.game = game;
         textureLose=new Texture(Gdx.files.internal("images/YouLOSE.jpeg"));
         spriteLose=new Sprite(textureLose);
-        spriteLose.translate(70f, 50f);
+        spriteLose.translate(75f, 70f);
     }
+
 
     @Override
     public void show() {
         stage= new Stage();
-        skin = new Skin();
         Gdx.input.setInputProcessor(stage);
-        //got Mr grondin's button images from the button scratch: https://github.com/Mrgfhci/LibGDX1
-        TaBtnImage = new TextureAtlas(Gdx.files.internal("images/UpButton.pack"));
-        skin.addRegions(TaBtnImage);
-        textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = font;
-        textButtonStyle.up = skin.getDrawable("ArrowUp");
-        textButtonStyle.down = skin.getDrawable("PressedArrowUp");
-        btnReturn = new TextButton("Return", textButtonStyle);
+        //got Mr grondin's button images from the button scratch: https://github.com/Mrgfhci
+        btnReturn= new TextButton("Return",textButtonStyle);
         btnReturn.setSize(50f, 50f);
         btnReturn.setPosition(spriteLose.getX(),spriteLose.getY());
         btnReturn.addListener(new InputListener() {//http://gamedev.stackexchange.com/questions/60123/registering-inputlistener-in-libgdx
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                //TODO: Update game back to main menu instead of the game screen
                 game.currentState = GameStomper.GameState.GAME;
                 game.updateScreen();
                 return true;

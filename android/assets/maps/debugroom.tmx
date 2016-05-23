@@ -84,7 +84,7 @@
    <properties>
     <property name="body" value="level"/>
     <property name="categoryBits" value="5"/>
-    <property name="maskBits" value="2"/>
+    <property name="maskBits" value="1"/>
     <property name="userData" value="spikes"/>
    </properties>
   </object>

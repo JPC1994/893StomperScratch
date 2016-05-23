@@ -14,7 +14,6 @@ public class Player extends Entity {
 	final static int MAX_HEALTH = 3;
 	int health;
 	int bulletCooldown;
-	public float immunity=0;
 	boolean bImmune=false;
 
 	Player(World world, Vector2 spawnposition) {
